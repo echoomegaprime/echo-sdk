@@ -55,16 +55,29 @@ export function maskKey(key: string): string {
 }
 
 /** Constant-time string comparison to prevent timing attacks — CONTRACT §SEC-3
- * Uses native crypto.subtle when available, falls back to manual comparison.
+ *
+ * Runtime is independent of whether the inputs are the same length: a naive
+ * `if (a.length !== b.length) return false` short-circuit (the previous
+ * implementation here) makes a length-mismatched comparison return far
+ * faster than a length-matched one, letting an attacker recover the target
+ * string's length via timing before ever attacking its content. This
+ * implementation folds the length difference into the same accumulator used
+ * for the byte comparison and always walks the full padded buffer, so a
+ * caller cannot distinguish "wrong length" from "right length, wrong bytes"
+ * by timing alone.
  */
 export function timingSafeEqual(a: string, b: string): boolean {
-  if (a.length !== b.length) return false;
   const encoder = new TextEncoder();
   const bufA = encoder.encode(a);
   const bufB = encoder.encode(b);
-  let mismatch = 0;
-  for (let i = 0; i < bufA.length; i++) {
-    mismatch |= bufA[i] ^ bufB[i];
+  const len = Math.max(bufA.length, bufB.length, 1);
+  const padA = new Uint8Array(len);
+  const padB = new Uint8Array(len);
+  padA.set(bufA);
+  padB.set(bufB);
+  let mismatch = bufA.length ^ bufB.length;
+  for (let i = 0; i < len; i++) {
+    mismatch |= padA[i] ^ padB[i];
   }
   return mismatch === 0;
 }
