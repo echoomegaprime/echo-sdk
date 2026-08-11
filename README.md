@@ -737,7 +737,19 @@ const results = await echo.search('MACRS depreciation', ['engines', 'knowledge']
 
 ## Zero Dependencies
 
-This SDK has **zero runtime dependencies**. It uses native `fetch`, native `crypto.subtle`, and ships its own retry logic, circuit breaker, and cache. The only dev dependencies are `tsup` and `typescript`.
+This SDK has **zero runtime dependencies**. It uses native `fetch`, native `crypto.subtle`, and ships its own retry logic, circuit breaker, and cache. Dev dependencies (`tsup`, `typescript`, `vitest`) are build/test-only and never ship in `dist/`.
+
+## Testing
+
+```bash
+npm test          # vitest run — security, circuit-breaker, errors, cache
+npm run typecheck  # tsc --noEmit
+npm run build      # tsup — dual CJS/ESM + .d.ts
+```
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). Security issues: see [SECURITY.md](SECURITY.md) — do not open a public issue for a vulnerability.
 
 ## License
 

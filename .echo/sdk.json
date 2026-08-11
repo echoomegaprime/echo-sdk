@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "package": "@echo-omega-prime/sdk",
+  "sdk_namespace_check": {
+    "checked_via": "echo.caps.search",
+    "queries": ["echo-sdk namespace (namespace=echo)", "echo-omega-prime sdk typescript client"],
+    "collisions_found": 0,
+    "checked_on": "2026-08-11"
+  },
+  "modules": 30,
+  "runtime_dependencies": 0
+}
